@@ -14,7 +14,7 @@ class OrdineGateway {
     {
         $statement = "
             SELECT 
-                id, quantita, cliente, id_alimento, stato
+                *
             FROM
                 ordine;
         ";
@@ -56,11 +56,7 @@ class OrdineGateway {
     {
         $statement = "
             SELECT 
-                id, 
-                quantita,
-                cliente,
-                id_alimento,
-                stato
+                *
             FROM
                 ordine
             WHERE id_alimento = ?;
@@ -80,12 +76,15 @@ class OrdineGateway {
     {
         $statement = "
             INSERT INTO ordine 
-                (quantita,
-                cliente,
-                id_alimento,
-                stato)
+                (
+                    quantita,
+                    cliente,
+                    id_alimento,
+                    stato,
+                    id_tipo
+                )
             VALUES
-                (:quantita,:cliente,:id_alimento,:stato);
+                (:quantita,:cliente,:id_alimento,:stato, :id_tipo);
         ";
 
         try {
@@ -94,7 +93,8 @@ class OrdineGateway {
                 'quantita' => $input['quantita'],
                 'cliente' => $input['cliente'],
                 'id_alimento' => $input['id_alimento'],
-                'stato' => $input['stato']
+                'stato' => $input['stato'],
+                'id_tipo' => $input['id_tipo']
             ));
             return $statement->rowCount();
         } catch (\PDOException $e) {
@@ -200,9 +200,11 @@ class OrdineGateway {
                 CREATE TABLE ordine (
                     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     quantita VARCHAR(30) NOT NULL,
+                    id_tipo BIGINT(8) NOT NULL,
                     cliente VARCHAR(30),
                     id_alimento BIGINT(8),
-                    stato BIGINT(8)
+                    stato BIGINT(8),
+                    datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 );
             ";
             try {
