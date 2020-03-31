@@ -183,4 +183,12 @@ class OrdineController {
         $response['body'] = null;
         return $response;
     }
+
+    public function confermallordine()
+    {
+        $this->OrdineGateway->confermaordine();
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = null;
+        return $response;
+    }
 }

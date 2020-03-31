@@ -16,7 +16,7 @@ $uri = explode( '/', $uri );
 
 // all of our endpoints start with /person
 // everything else results in a 404 Not Found
-if ($uri[1] !== "prodotti" && $uri[1] !== "ordine" && $uri[1] !== "getordinialimento" && $uri[1] !== "tipoquantita") { // || $uri[1] !== "orario"
+if ($uri[1] !== "prodotti" && $uri[1] !== "ordine" && $uri[1] !== "getordinialimento" && $uri[1] !== "tipoquantita" && $uri[1] !== "confermallordine") { // || $uri[1] !== "orario"
     header("HTTP/1.1 405 Not Found");
     exit();
 }elseif($uri[1] === 'ordine'){
@@ -27,6 +27,8 @@ if ($uri[1] !== "prodotti" && $uri[1] !== "ordine" && $uri[1] !== "getordinialim
     $method = "getordinialimento";
 }elseif($uri[1] === 'tipoquantita'){
     $method = "tipoquantita";
+}elseif($uri[1] === 'confermallordine'){
+    $method = "confermallordine";
 }
 
 // the user id is, of course, optional and must be a number:
@@ -54,6 +56,10 @@ switch ($method){
     case "tipoquantita":
         $controller = new TipoQuantitaController($dbConnection, $requestMethod, $userId);
         $controller->processRequest($userId);
+        break;
+    case "confermallordine":
+        $controller = new OrdineController($dbConnection, $requestMethod, $userId);
+        $controller->confermallordine();
         break;
     default:
         exit(json_encode("Non conosco la rotta"));

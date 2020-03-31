@@ -16,7 +16,9 @@ class OrdineGateway {
             SELECT 
                 *
             FROM
-                ordine;
+                ordine
+            WHERE
+                stato != 3;
         ";
 
         try {
@@ -217,6 +219,20 @@ class OrdineGateway {
         }
         
         return true;
+    }
+
+    public function confermaordine(){
+        $statement = "
+            UPDATE frutta.ordine
+            SET stato = 3
+            WHERE stato != 3;
+        ";
+        try {
+            $statement = $this->db->prepare($statement);
+            $statement->execute();
+        } catch (\PDOException $e) {
+            exit($e->getMessage());
+        }
     }
 }
 
